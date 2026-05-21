@@ -1,5 +1,6 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 type Section = 'dashboard' | 'pharmacies' | 'users' | 'orders' | 'subscriptions' | 'reports';
 
@@ -44,8 +45,22 @@ const subscriptions = [
 ];
 
 export default function AdminPage() {
+  const router = useRouter();
   const [active, setActive] = useState<Section>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [authed, setAuthed] = useState(false);
+
+  useEffect(() => {
+    // TODO: replace with real session/token check
+    const isAdmin = sessionStorage.getItem('admin_authed');
+    if (!isAdmin) {
+      router.replace('/admin/login');
+    } else {
+      setAuthed(true);
+    }
+  }, [router]);
+
+  if (!authed) return null;
 
   return (
     <div dir="rtl" style={{ display: 'flex', minHeight: '100vh', background: '#0f0f0f', color: '#e8e0d0', fontFamily: 'Segoe UI, Tahoma, Arial, sans-serif' }}>
@@ -104,12 +119,24 @@ export default function AdminPage() {
           ))}
         </nav>
 
+        {/* Logout */}
+        <button
+          onClick={() => { sessionStorage.removeItem('admin_authed'); router.replace('/admin/login'); }}
+          style={{
+            margin: '0 12px 8px', padding: '9px 12px', border: '1px solid #3a1a1a', borderRadius: 8,
+            background: 'rgba(229,115,115,0.08)', color: '#e57373', cursor: 'pointer',
+            fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, width: 'calc(100% - 24px)',
+          }}
+        >
+          <span>🚪</span>{sidebarOpen && <span>تسجيل الخروج</span>}
+        </button>
+
         {/* Toggle button */}
         <button
           onClick={() => setSidebarOpen(v => !v)}
           style={{
-            margin: 12, padding: '8px', border: '1px solid #2a2a2a', borderRadius: 8,
-            background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 16,
+            margin: '0 12px 12px', padding: '8px', border: '1px solid #2a2a2a', borderRadius: 8,
+            background: 'transparent', color: '#666', cursor: 'pointer', fontSize: 16, width: 'calc(100% - 24px)',
           }}
         >
           {sidebarOpen ? '◀' : '▶'}
