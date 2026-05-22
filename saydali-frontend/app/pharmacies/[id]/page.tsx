@@ -35,7 +35,7 @@ export default function PharmacyDetailPage() {
   const id = Number(params.id);
   const pharmacy = PHARMACIES[id];
   const [cart, setCart] = useState<number[]>([]);
-  const [tab, setTab] = useState<'medicines' | 'info'>('medicines');
+  const [tab, setTab] = useState<'medicines' | 'info' | 'reviews'>('medicines');
 
   if (!pharmacy) return (
     <div dir="rtl" style={{ minHeight:'100vh', background:'#0f0f0f', display:'flex', alignItems:'center', justifyContent:'center', color:'#888', fontFamily:'Segoe UI,Tahoma,Arial,sans-serif' }}>
@@ -105,6 +105,7 @@ export default function PharmacyDetailPage() {
       <div style={{ background:'#111', borderBottom:'1px solid #1a1a1a', padding:'0 24px' }}>
         <div style={{ maxWidth:800, margin:'0 auto', display:'flex' }}>
           <button className={`tab${tab==='medicines'?' active':''}`} onClick={()=>setTab('medicines')}>💊 الأدوية</button>
+          <button className={`tab${tab==='reviews'?' active':''}`} onClick={()=>setTab('reviews')}>⭐ التقييمات</button>
           <button className={`tab${tab==='info'?' active':''}`} onClick={()=>setTab('info')}>ℹ️ معلومات</button>
         </div>
       </div>
@@ -148,6 +149,9 @@ export default function PharmacyDetailPage() {
           </div>
         )}
 
+        {/* Reviews tab */}
+        {tab === 'reviews' && <ReviewsSection pharmacyId={id} rating={pharmacy.rating} reviewCount={pharmacy.reviews} />}
+
         {/* Info tab */}
         {tab === 'info' && (
           <div style={{ display:'flex', flexDirection:'column', gap:16 }}>
@@ -174,6 +178,123 @@ export default function PharmacyDetailPage() {
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+const DEMO_REVIEWS = [
+  { id:1, name:'سارة علي',    stars:5, date:'2024-04-18', text:'خدمة ممتازة والأدوية دائماً متوفرة. الصيدلاني محترم ومتعاون.' },
+  { id:2, name:'محمد حسين',  stars:4, date:'2024-04-10', text:'سريعين بالتوصيل وأسعار معقولة. أنصح بيهم.' },
+  { id:3, name:'علي كريم',   stars:5, date:'2024-03-28', text:'أفضل صيدلية جربتها. دائماً عندهم كل شي.' },
+  { id:4, name:'زينب كاظم', stars:3, date:'2024-03-15', text:'الخدمة كويسة بس أحياناً يتأخرون شوية بالرد.' },
+];
+
+function ReviewsSection({ pharmacyId, rating, reviewCount }: { pharmacyId:number; rating:number; reviewCount:number }) {
+  const [myStars, setMyStars]   = useState(0);
+  const [hovered, setHovered]   = useState(0);
+  const [myText, setMyText]     = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [reviews, setReviews]   = useState(DEMO_REVIEWS);
+
+  const distribution = [5,4,3,2,1].map(s => ({
+    stars: s,
+    count: reviews.filter(r => r.stars === s).length,
+    pct: Math.round((reviews.filter(r => r.stars === s).length / reviews.length) * 100),
+  }));
+
+  const handleSubmit = () => {
+    if (!myStars || !myText.trim()) return;
+    setReviews(prev => [{
+      id: Date.now(), name:'أنت', stars:myStars, date:new Date().toISOString().split('T')[0], text:myText,
+    }, ...prev]);
+    setSubmitted(true);
+    setMyStars(0);
+    setMyText('');
+  };
+
+  return (
+    <div>
+      {/* Summary */}
+      <div style={{ background:'#161616', border:'1px solid #222', borderRadius:14, padding:20, marginBottom:16, display:'flex', gap:24, flexWrap:'wrap', alignItems:'center' }}>
+        <div style={{ textAlign:'center', flexShrink:0 }}>
+          <div style={{ fontSize:48, fontWeight:700, color:'#D4AF37', lineHeight:1 }}>{rating}</div>
+          <div style={{ fontSize:20, color:'#D4AF37', margin:'4px 0' }}>{'★'.repeat(Math.round(rating))}</div>
+          <div style={{ fontSize:12, color:'#666' }}>{reviewCount} تقييم</div>
+        </div>
+        <div style={{ flex:1, minWidth:200 }}>
+          {distribution.map(d => (
+            <div key={d.stars} style={{ display:'flex', alignItems:'center', gap:8, marginBottom:6 }}>
+              <span style={{ fontSize:12, color:'#888', width:16, flexShrink:0 }}>{d.stars}</span>
+              <span style={{ color:'#D4AF37', fontSize:13 }}>★</span>
+              <div style={{ flex:1, background:'#2a2a2a', borderRadius:4, height:6, overflow:'hidden' }}>
+                <div style={{ width:`${d.pct}%`, height:'100%', background:'linear-gradient(90deg,#D4AF37,#F0D060)', borderRadius:4, transition:'width 0.5s ease' }} />
+              </div>
+              <span style={{ fontSize:12, color:'#666', width:28 }}>{d.count}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Write review */}
+      {submitted ? (
+        <div style={{ background:'rgba(129,199,132,0.1)', border:'1px solid rgba(129,199,132,0.3)', borderRadius:14, padding:16, marginBottom:16, textAlign:'center', color:'#81c784', fontSize:14 }}>
+          ✓ شكراً! تم إرسال تقييمك
+        </div>
+      ) : (
+        <div style={{ background:'#161616', border:'1px solid #222', borderRadius:14, padding:20, marginBottom:16 }}>
+          <h3 style={{ fontSize:14, color:'#D4AF37', marginBottom:14 }}>أضف تقييمك</h3>
+          {/* Stars */}
+          <div style={{ display:'flex', gap:8, marginBottom:14, fontSize:28 }}>
+            {[1,2,3,4,5].map(s => (
+              <span
+                key={s}
+                style={{ cursor:'pointer', color: s <= (hovered || myStars) ? '#D4AF37' : '#333', transition:'color 0.15s' }}
+                onMouseEnter={()=>setHovered(s)}
+                onMouseLeave={()=>setHovered(0)}
+                onClick={()=>setMyStars(s)}
+              >★</span>
+            ))}
+            {myStars > 0 && <span style={{ fontSize:13, color:'#888', alignSelf:'center', marginRight:4 }}>
+              {['','سيء','مقبول','جيد','جيد جداً','ممتاز'][myStars]}
+            </span>}
+          </div>
+          <textarea
+            value={myText}
+            onChange={e=>setMyText(e.target.value)}
+            placeholder="شاركنا تجربتك مع هذه الصيدلية..."
+            rows={3}
+            style={{ width:'100%', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:10, padding:'11px 14px', color:'#e8e0d0', fontSize:13, resize:'none', outline:'none', boxSizing:'border-box', fontFamily:'inherit', transition:'border-color 0.2s' }}
+            onFocus={e=>e.target.style.borderColor='#D4AF37'}
+            onBlur={e=>e.target.style.borderColor='#2a2a2a'}
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={!myStars || !myText.trim()}
+            style={{ marginTop:10, padding:'10px 24px', borderRadius:8, border:'none', background: (!myStars||!myText.trim()) ? '#1e1e1e' : 'linear-gradient(135deg,#D4AF37,#8B6914)', color: (!myStars||!myText.trim()) ? '#555' : '#111', cursor:(!myStars||!myText.trim()) ? 'not-allowed' : 'pointer', fontSize:14, fontWeight:700, fontFamily:'inherit' }}
+          >
+            إرسال التقييم
+          </button>
+        </div>
+      )}
+
+      {/* Reviews list */}
+      <div style={{ display:'flex', flexDirection:'column', gap:12 }}>
+        {reviews.map(r => (
+          <div key={r.id} style={{ background:'#161616', border:'1px solid #222', borderRadius:14, padding:18 }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:8 }}>
+              <div style={{ display:'flex', gap:10, alignItems:'center' }}>
+                <div style={{ width:36, height:36, borderRadius:'50%', background:'linear-gradient(135deg,#2a2a2a,#333)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:16 }}>👤</div>
+                <div>
+                  <div style={{ fontSize:14, fontWeight:600 }}>{r.name}</div>
+                  <div style={{ fontSize:12, color:'#D4AF37' }}>{'★'.repeat(r.stars)}{'☆'.repeat(5-r.stars)}</div>
+                </div>
+              </div>
+              <span style={{ fontSize:12, color:'#555' }}>{r.date}</span>
+            </div>
+            <p style={{ fontSize:13, color:'#aaa', lineHeight:1.7, margin:0 }}>{r.text}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
