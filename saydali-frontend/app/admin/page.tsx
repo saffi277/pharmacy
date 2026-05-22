@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-type Section = 'dashboard' | 'pharmacies' | 'users' | 'orders' | 'subscriptions' | 'reports';
+type Section = 'dashboard' | 'pharmacies' | 'users' | 'orders' | 'subscriptions' | 'reports' | 'products';
 
 const navItems: { id: Section; label: string; icon: string }[] = [
   { id: 'dashboard',     label: 'الرئيسية',    icon: '🏠' },
@@ -10,15 +10,18 @@ const navItems: { id: Section; label: string; icon: string }[] = [
   { id: 'users',         label: 'المستخدمين',  icon: '👥' },
   { id: 'orders',        label: 'الطلبات',     icon: '📦' },
   { id: 'subscriptions', label: 'الاشتراكات',  icon: '💳' },
+  { id: 'products',      label: 'المنتجات',    icon: '💊' },
   { id: 'reports',       label: 'التقارير',    icon: '📊' },
 ];
 
-const pharmacies = [
-  { id: 1, name: 'صيدلية الأمل', owner: 'أحمد محمد', city: 'بغداد', status: 'نشط',   sub: 'مدفوع',  joined: '2024-01-15' },
-  { id: 2, name: 'صيدلية النور', owner: 'سالم علي',  city: 'البصرة', status: 'معلق',  sub: 'منتهي',  joined: '2024-02-20' },
-  { id: 3, name: 'صيدلية الشفاء', owner: 'محمد حسن', city: 'أربيل', status: 'نشط',   sub: 'مدفوع',  joined: '2024-03-10' },
-  { id: 4, name: 'صيدلية الحياة', owner: 'علي كريم', city: 'موصل', status: 'نشط',   sub: 'مدفوع',  joined: '2024-03-22' },
-  { id: 5, name: 'صيدلية بغداد',  owner: 'كريم جاسم', city: 'بغداد', status: 'معلق', sub: 'منتهي',  joined: '2024-04-05' },
+type Pharmacy = { id:number; name:string; owner:string; city:string; status:string; sub:string; joined:string; };
+
+const initPharmacies: Pharmacy[] = [
+  { id: 1, name: 'صيدلية الأمل',   owner: 'أحمد محمد',  city: 'بغداد',  status: 'نشط',  sub: 'مدفوع',  joined: '2024-01-15' },
+  { id: 2, name: 'صيدلية النور',   owner: 'سالم علي',   city: 'البصرة', status: 'معلق', sub: 'منتهي', joined: '2024-02-20' },
+  { id: 3, name: 'صيدلية الشفاء', owner: 'محمد حسن',  city: 'أربيل',  status: 'نشط',  sub: 'مدفوع',  joined: '2024-03-10' },
+  { id: 4, name: 'صيدلية الحياة', owner: 'علي كريم',   city: 'موصل',   status: 'نشط',  sub: 'مدفوع',  joined: '2024-03-22' },
+  { id: 5, name: 'صيدلية بغداد',  owner: 'كريم جاسم',  city: 'بغداد',  status: 'معلق', sub: 'منتهي', joined: '2024-04-05' },
 ];
 
 const users = [
@@ -46,9 +49,10 @@ const subscriptions = [
 
 export default function AdminPage() {
   const router = useRouter();
-  const [active, setActive] = useState<Section>('dashboard');
+  const [active, setActive]           = useState<Section>('dashboard');
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [authed, setAuthed] = useState(false);
+  const [authed, setAuthed]           = useState(false);
+  const [pharmacyList, setPharmacyList] = useState<Pharmacy[]>(initPharmacies);
 
   useEffect(() => {
     // TODO: replace with real session/token check
@@ -165,12 +169,13 @@ export default function AdminPage() {
         </header>
 
         <div style={{ flex: 1, overflowY: 'auto', padding: 24 }}>
-          {active === 'dashboard' && <DashboardSection />}
-          {active === 'pharmacies' && <PharmaciesSection />}
-          {active === 'users' && <UsersSection />}
-          {active === 'orders' && <OrdersSection />}
-          {active === 'subscriptions' && <SubscriptionsSection />}
-          {active === 'reports' && <ReportsSection />}
+          {active === 'dashboard'     && <DashboardSection pharmacyList={pharmacyList} />}
+          {active === 'pharmacies'   && <PharmaciesSection pharmacyList={pharmacyList} setPharmacyList={setPharmacyList} />}
+          {active === 'users'        && <UsersSection />}
+          {active === 'orders'       && <OrdersSection />}
+          {active === 'subscriptions'&& <SubscriptionsSection />}
+          {active === 'products'     && <ProductsSection />}
+          {active === 'reports'      && <ReportsSection />}
         </div>
       </main>
     </div>
@@ -178,20 +183,18 @@ export default function AdminPage() {
 }
 
 /* ─── DASHBOARD ─── */
-function DashboardSection() {
+function DashboardSection({ pharmacyList }: { pharmacyList: Pharmacy[] }) {
   const stats = [
-    { label: 'الصيدليات', value: '124',    icon: '🏥', color: '#D4AF37' },
-    { label: 'المستخدمين', value: '3,842', icon: '👥', color: '#4fc3f7' },
-    { label: 'طلبات اليوم', value: '287',  icon: '📦', color: '#81c784' },
-    { label: 'الإيرادات',   value: '$1,240', icon: '💰', color: '#ff8a65' },
+    { label: 'الصيدليات',   value: pharmacyList.length.toString(), icon: '🏥', color: '#D4AF37' },
+    { label: 'المستخدمين',  value: '3,842',                        icon: '👥', color: '#4fc3f7' },
+    { label: 'طلبات اليوم', value: '287',                          icon: '📦', color: '#81c784' },
+    { label: 'الإيرادات',   value: '$1,240',                       icon: '💰', color: '#ff8a65' },
   ];
   return (
     <div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 28 }}>
         {stats.map(s => (
-          <div key={s.label} style={{
-            background: '#161616', border: '1px solid #252525', borderRadius: 14, padding: '20px 22px',
-          }}>
+          <div key={s.label} style={{ background: '#161616', border: '1px solid #252525', borderRadius: 14, padding: '20px 22px' }}>
             <div style={{ fontSize: 28, marginBottom: 8 }}>{s.icon}</div>
             <div style={{ fontSize: 28, fontWeight: 700, color: s.color }}>{s.value}</div>
             <div style={{ fontSize: 13, color: '#888', marginTop: 4 }}>{s.label}</div>
@@ -199,25 +202,81 @@ function DashboardSection() {
         ))}
       </div>
       <SectionTitle>آخر الصيدليات المسجلة</SectionTitle>
-      <PharmacyTable rows={pharmacies.slice(0, 3)} />
+      <PharmacyTable rows={pharmacyList.slice(0, 3)} onToggle={()=>{}} onDelete={()=>{}} />
     </div>
   );
 }
 
 /* ─── PHARMACIES ─── */
-function PharmaciesSection() {
+function PharmaciesSection({ pharmacyList, setPharmacyList }: { pharmacyList: Pharmacy[]; setPharmacyList: React.Dispatch<React.SetStateAction<Pharmacy[]>> }) {
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ name:'', owner:'', city:'', phone:'' });
+
+  const toggleStatus = (id: number) => {
+    setPharmacyList(prev => prev.map(p =>
+      p.id === id ? { ...p, status: p.status === 'نشط' ? 'معلق' : 'نشط' } : p
+    ));
+  };
+
+  const deletePharmacy = (id: number) => {
+    if (confirm('هل أنت متأكد من حذف هذه الصيدلية؟')) {
+      setPharmacyList(prev => prev.filter(p => p.id !== id));
+    }
+  };
+
+  const addPharmacy = () => {
+    if (!form.name || !form.owner || !form.city) return;
+    const newP: Pharmacy = {
+      id: Date.now(), name: form.name, owner: form.owner, city: form.city,
+      status: 'نشط', sub: 'مدفوع', joined: new Date().toISOString().split('T')[0],
+    };
+    setPharmacyList(prev => [...prev, newP]);
+    setForm({ name:'', owner:'', city:'', phone:'' });
+    setShowModal(false);
+  };
+
   return (
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <SectionTitle>جميع الصيدليات</SectionTitle>
-        <button style={addBtn}>+ إضافة صيدلية</button>
+        <SectionTitle>جميع الصيدليات ({pharmacyList.length})</SectionTitle>
+        <button style={addBtn} onClick={()=>setShowModal(true)}>+ إضافة صيدلية</button>
       </div>
-      <PharmacyTable rows={pharmacies} />
+      <PharmacyTable rows={pharmacyList} onToggle={toggleStatus} onDelete={deletePharmacy} />
+
+      {/* Add Modal */}
+      {showModal && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:100 }} onClick={()=>setShowModal(false)}>
+          <div dir="rtl" style={{ background:'#161616', border:'1px solid #2a2a2a', borderRadius:18, padding:28, width:400, maxWidth:'90vw' }} onClick={e=>e.stopPropagation()}>
+            <h3 style={{ fontSize:16, fontWeight:700, color:'#D4AF37', marginBottom:20 }}>إضافة صيدلية جديدة</h3>
+            {[
+              { label:'اسم الصيدلية', key:'name',  placeholder:'صيدلية ...' },
+              { label:'اسم المالك',   key:'owner', placeholder:'الاسم الكامل' },
+              { label:'المدينة',      key:'city',  placeholder:'بغداد، البصرة...' },
+              { label:'رقم الهاتف',   key:'phone', placeholder:'+964 7XX XXX XXXX' },
+            ].map(f => (
+              <div key={f.key} style={{ marginBottom:14 }}>
+                <label style={{ fontSize:12, color:'#888', display:'block', marginBottom:5 }}>{f.label}</label>
+                <input
+                  type="text"
+                  placeholder={f.placeholder}
+                  value={(form as Record<string,string>)[f.key]}
+                  onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  style={{ width:'100%', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:8, padding:'10px 12px', color:'#e8e0d0', fontSize:13, outline:'none', boxSizing:'border-box', fontFamily:'inherit' }}
+                />
+              </div>
+            ))}
+            <div style={{ display:'flex', gap:10, marginTop:8 }}>
+              <button onClick={addPharmacy} style={{ ...addBtn, flex:1 }}>إضافة</button>
+              <button onClick={()=>setShowModal(false)} style={{ flex:1, padding:'10px', borderRadius:8, border:'1px solid #333', background:'transparent', color:'#888', cursor:'pointer', fontFamily:'inherit' }}>إلغاء</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-function PharmacyTable({ rows }: { rows: typeof pharmacies }) {
+function PharmacyTable({ rows, onToggle, onDelete }: { rows: Pharmacy[]; onToggle:(id:number)=>void; onDelete:(id:number)=>void }) {
   return (
     <div style={{ background: '#161616', border: '1px solid #222', borderRadius: 14, overflow: 'hidden' }}>
       <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
@@ -239,7 +298,13 @@ function PharmacyTable({ rows }: { rows: typeof pharmacies }) {
               <td style={{ ...td, color: '#666' }}>{p.joined}</td>
               <td style={td}>
                 <button style={viewBtn}>عرض</button>
-                <button style={delBtn}>حذف</button>
+                <button
+                  onClick={() => onToggle(p.id)}
+                  style={{ ...viewBtn, color: p.status === 'نشط' ? '#e57373' : '#81c784', borderColor: p.status === 'نشط' ? '#e5737366' : '#81c78466', marginLeft: 4 }}
+                >
+                  {p.status === 'نشط' ? 'تعليق' : 'تفعيل'}
+                </button>
+                <button style={delBtn} onClick={() => onDelete(p.id)}>حذف</button>
               </td>
             </tr>
           ))}
@@ -359,6 +424,134 @@ function SubscriptionsSection() {
           </tbody>
         </table>
       </div>
+    </div>
+  );
+}
+
+/* ─── PRODUCTS ─── */
+type Product = { id:number; nameAr:string; nameEn:string; category:string; basePrice:number; image:string; };
+
+const initProducts: Product[] = [
+  { id:1, nameAr:'باراسيتامول 500mg',  nameEn:'Paracetamol 500mg',  category:'مسكنات',       basePrice:1500,  image:'💊' },
+  { id:2, nameAr:'أموكسيسيلين 500mg',  nameEn:'Amoxicillin 500mg',  category:'مضادات حيوية', basePrice:4500,  image:'💊' },
+  { id:3, nameAr:'فيتامين C 1000mg',   nameEn:'Vitamin C 1000mg',   category:'فيتامينات',    basePrice:5500,  image:'💊' },
+  { id:4, nameAr:'إيبوبروفين 400mg',   nameEn:'Ibuprofen 400mg',    category:'مسكنات',       basePrice:2000,  image:'💊' },
+  { id:5, nameAr:'ميتفورمين 500mg',    nameEn:'Metformin 500mg',    category:'سكري',         basePrice:4000,  image:'💊' },
+];
+
+function ProductsSection() {
+  const [products, setProducts] = useState<Product[]>(initProducts);
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState({ nameAr:'', nameEn:'', category:'مسكنات', basePrice:'', image:'' });
+  const [imgPreview, setImgPreview] = useState<string | null>(null);
+
+  const CATS = ['مسكنات','مضادات حيوية','هضمي','فيتامينات','حساسية','سكري','ضغط','أطفال','كوليسترول'];
+
+  const addProduct = () => {
+    if (!form.nameAr || !form.nameEn || !form.basePrice) return;
+    const p: Product = {
+      id: Date.now(),
+      nameAr: form.nameAr,
+      nameEn: form.nameEn,
+      category: form.category,
+      basePrice: Number(form.basePrice),
+      image: imgPreview || '💊',
+    };
+    setProducts(prev => [...prev, p]);
+    setForm({ nameAr:'', nameEn:'', category:'مسكنات', basePrice:'', image:'' });
+    setImgPreview(null);
+    setShowModal(false);
+  };
+
+  const deleteProduct = (id: number) => {
+    if (confirm('حذف هذا المنتج؟')) setProducts(prev => prev.filter(p => p.id !== id));
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => setImgPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
+        <SectionTitle>المنتجات / الأدوية ({products.length})</SectionTitle>
+        <button style={addBtn} onClick={()=>setShowModal(true)}>+ إضافة منتج</button>
+      </div>
+
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(220px,1fr))', gap:14 }}>
+        {products.map(p => (
+          <div key={p.id} style={{ background:'#161616', border:'1px solid #222', borderRadius:14, padding:18, position:'relative' }}>
+            <div style={{ fontSize: typeof p.image === 'string' && p.image.startsWith('data:') ? 0 : 32, marginBottom:10 }}>
+              {p.image.startsWith('data:') ? (
+                <img src={p.image} alt={p.nameAr} style={{ width:56, height:56, objectFit:'cover', borderRadius:10 }} />
+              ) : p.image}
+            </div>
+            <div style={{ fontSize:14, fontWeight:700, marginBottom:2 }}>{p.nameAr}</div>
+            <div style={{ fontSize:11, color:'#666', marginBottom:8, direction:'ltr', textAlign:'right' }}>{p.nameEn}</div>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <span style={{ padding:'2px 8px', borderRadius:20, fontSize:11, background:'rgba(212,175,55,0.1)', color:'#D4AF37' }}>{p.category}</span>
+              <span style={{ fontSize:13, fontWeight:700, color:'#D4AF37' }}>{p.basePrice.toLocaleString()} د.ع</span>
+            </div>
+            <button onClick={()=>deleteProduct(p.id)} style={{ position:'absolute', top:10, left:10, background:'none', border:'none', color:'#e57373', cursor:'pointer', fontSize:16, opacity:0.6 }}>🗑️</button>
+          </div>
+        ))}
+      </div>
+
+      {/* Add Product Modal */}
+      {showModal && (
+        <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:100 }} onClick={()=>setShowModal(false)}>
+          <div dir="rtl" style={{ background:'#161616', border:'1px solid #2a2a2a', borderRadius:18, padding:28, width:440, maxWidth:'90vw', maxHeight:'85vh', overflowY:'auto' }} onClick={e=>e.stopPropagation()}>
+            <h3 style={{ fontSize:16, fontWeight:700, color:'#D4AF37', marginBottom:20 }}>إضافة منتج جديد</h3>
+
+            {/* Image upload */}
+            <div style={{ marginBottom:16 }}>
+              <label style={{ fontSize:12, color:'#888', display:'block', marginBottom:8 }}>صورة المنتج</label>
+              <div style={{ display:'flex', gap:12, alignItems:'center' }}>
+                <div style={{ width:64, height:64, borderRadius:12, background:'#1a1a1a', border:'1px dashed #333', display:'flex', alignItems:'center', justifyContent:'center', overflow:'hidden', flexShrink:0 }}>
+                  {imgPreview ? <img src={imgPreview} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} /> : <span style={{ fontSize:28 }}>💊</span>}
+                </div>
+                <label style={{ padding:'8px 16px', border:'1px dashed #D4AF3766', borderRadius:8, color:'#D4AF37', cursor:'pointer', fontSize:13 }}>
+                  📁 رفع صورة
+                  <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display:'none' }} />
+                </label>
+              </div>
+            </div>
+
+            {[
+              { label:'اسم الدواء (عربي)',    key:'nameAr',    placeholder:'باراسيتامول 500mg' },
+              { label:'اسم الدواء (إنجليزي)', key:'nameEn',    placeholder:'Paracetamol 500mg' },
+              { label:'السعر الأساسي (د.ع)',   key:'basePrice', placeholder:'1500' },
+            ].map(f => (
+              <div key={f.key} style={{ marginBottom:14 }}>
+                <label style={{ fontSize:12, color:'#888', display:'block', marginBottom:5 }}>{f.label}</label>
+                <input
+                  type="text"
+                  placeholder={f.placeholder}
+                  value={(form as Record<string,string>)[f.key]}
+                  onChange={e => setForm(prev => ({ ...prev, [f.key]: e.target.value }))}
+                  style={{ width:'100%', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:8, padding:'10px 12px', color:'#e8e0d0', fontSize:13, outline:'none', boxSizing:'border-box', fontFamily:'inherit' }}
+                />
+              </div>
+            ))}
+
+            <div style={{ marginBottom:16 }}>
+              <label style={{ fontSize:12, color:'#888', display:'block', marginBottom:5 }}>الفئة</label>
+              <select value={form.category} onChange={e=>setForm(prev=>({...prev,category:e.target.value}))} style={{ width:'100%', background:'#1a1a1a', border:'1px solid #2a2a2a', borderRadius:8, padding:'10px 12px', color:'#e8e0d0', fontSize:13, outline:'none', fontFamily:'inherit' }}>
+                {CATS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+
+            <div style={{ display:'flex', gap:10 }}>
+              <button onClick={addProduct} style={{ ...addBtn, flex:1 }}>إضافة المنتج</button>
+              <button onClick={()=>setShowModal(false)} style={{ flex:1, padding:'10px', borderRadius:8, border:'1px solid #333', background:'transparent', color:'#888', cursor:'pointer', fontFamily:'inherit' }}>إلغاء</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
