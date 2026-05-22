@@ -1,5 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { MEDICINES, CATEGORIES, type Medicine } from '@/lib/medicines';
 
 type MedSetting = { enabled: boolean; price: number };
@@ -12,13 +14,32 @@ const initSettings = (): Record<number, MedSetting> => {
 
 type Tab = 'medicines' | 'profile' | 'orders';
 
+type OwnerData = { pharmacyName: string; city: string; email: string; id: number };
+
 export default function OwnerPage() {
+  const router = useRouter();
+  const [ownerData, setOwnerData] = useState<OwnerData | null>(null);
   const [settings, setSettings]     = useState<Record<number, MedSetting>>(initSettings);
   const [activeTab, setActiveTab]   = useState<Tab>('medicines');
   const [filterCat, setFilterCat]   = useState('الكل');
   const [search, setSearch]         = useState('');
   const [editingPrice, setEditingPrice] = useState<number | null>(null);
   const [saved, setSaved]           = useState(false);
+
+  useEffect(() => {
+    const authed = sessionStorage.getItem('owner_authed');
+    const data   = sessionStorage.getItem('owner_data');
+    if (!authed || !data) { router.replace('/owner/login'); return; }
+    setOwnerData(JSON.parse(data));
+  }, [router]);
+
+  if (!ownerData) return null;
+
+  const logout = () => {
+    sessionStorage.removeItem('owner_authed');
+    sessionStorage.removeItem('owner_data');
+    router.replace('/owner/login');
+  };
 
   const toggleMed = (id: number) => {
     setSettings(prev => ({ ...prev, [id]: { ...prev[id], enabled: !prev[id].enabled } }));
@@ -68,17 +89,19 @@ export default function OwnerPage() {
       {/* Header */}
       <header style={{ padding:'16px 24px', borderBottom:'1px solid #1a1a1a', display:'flex', alignItems:'center', justifyContent:'space-between', background:'#111', position:'sticky', top:0, zIndex:10 }}>
         <div style={{ display:'flex', alignItems:'center', gap:10 }}>
-          <span style={{ fontSize:22 }}>⚕️</span>
+          <span style={{ fontSize:22 }}>🏥</span>
           <div>
-            <div style={{ fontSize:16, fontWeight:700, color:'#D4AF37' }}>صيدلية الأمل</div>
-            <div style={{ fontSize:11, color:'#81c784' }}>● نشط — اشتراك مدفوع</div>
+            <div style={{ fontSize:16, fontWeight:700, color:'#3da53d' }}>{ownerData.pharmacyName}</div>
+            <div style={{ fontSize:11, color:'#81c784' }}>● نشط — اشتراك مدفوع · {ownerData.city}</div>
           </div>
         </div>
         <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-          <span style={{ fontSize:12, color:'#888', background:'rgba(212,175,55,0.1)', padding:'4px 12px', borderRadius:20, border:'1px solid rgba(212,175,55,0.2)' }}>
+          <span style={{ fontSize:12, color:'#888', background:'rgba(61,165,61,0.1)', padding:'4px 12px', borderRadius:20, border:'1px solid rgba(61,165,61,0.2)' }}>
             {enabledCount} دواء معروض
           </span>
-          <span style={{ fontSize:13, color:'#666' }}>أحمد محمد</span>
+          <button onClick={logout} style={{ padding:'6px 14px', borderRadius:8, border:'1px solid #2a3a2a', background:'transparent', color:'#888', cursor:'pointer', fontSize:12, fontFamily:'inherit' }}>
+            خروج
+          </button>
         </div>
       </header>
 
