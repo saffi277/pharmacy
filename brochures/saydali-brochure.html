@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بروشور صيدلي — زاون</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap');
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Cairo', 'Amiri', sans-serif;
+    background: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    padding: 40px 20px;
+  }
+
+  /* ══════════════════════════════════
+     BROCHURE FRONT
+  ══════════════════════════════════ */
+  .brochure {
+    width: 210mm;
+    min-height: 297mm;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+
+  /* ── FRONT SIDE ── */
+  .front {
+    background: linear-gradient(160deg, #0a0a0a 0%, #111 40%, #0d1a0d 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* top gold bar */
+  .front::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, #8B6914, #D4AF37, #F0D060, #D4AF37, #8B6914);
+  }
+
+  .front-inner {
+    padding: 40px 44px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #D4AF37, #8B6914);
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  .logo-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .logo-ar {
+    font-family: 'Amiri', serif;
+    font-size: 32px;
+    font-weight: 700;
+    background: linear-gradient(180deg, #D4AF37, #8B6914);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+
+  .logo-en {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: #8B6914;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .zawan-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+  }
+
+  .zawan-label {
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 1px;
+  }
+
+  .zawan-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #D4AF37;
+    letter-spacing: 2px;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    margin-bottom: 44px;
+    position: relative;
+  }
+
+  .hero-symbol {
+    font-size: 100px;
+    line-height: 1;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 8px 24px rgba(212,175,55,0.3));
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #D4AF37;
+    border: 1px solid #D4AF3744;
+    padding: 5px 16px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+
+  .hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+
+  .hero-title span {
+    background: linear-gradient(135deg, #D4AF37, #F0D060);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: #888;
+    line-height: 1.8;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  /* Divider */
+  .divider {
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+    margin: 20px auto;
+  }
+
+  /* Features grid */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .feat {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+
+  .feat-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+
+  .feat-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #D4AF37;
+    margin-bottom: 6px;
+  }
+
+  .feat-desc {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.6;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    background: rgba(212,175,55,0.06);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 36px;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-val {
+    font-size: 28px;
+    font-weight: 900;
+    color: #D4AF37;
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+  }
+
+  .stat-sep {
+    width: 1px;
+    background: rgba(212,175,55,0.2);
+  }
+
+  /* Plans */
+  .plans-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #D4AF37;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .plans {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+
+  .plan {
+    flex: 1;
+    border: 1px solid #2a2a2a;
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    position: relative;
+  }
+
+  .plan.highlight {
+    border-color: #D4AF37;
+    background: rgba(212,175,55,0.06);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #D4AF37, #8B6914);
+    color: #111;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 12px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  .plan-name {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 8px;
+  }
+
+  .plan-price {
+    font-size: 26px;
+    font-weight: 900;
+    color: #D4AF37;
+    line-height: 1;
+  }
+
+  .plan-period {
+    font-size: 11px;
+    color: #555;
+    margin-top: 2px;
+    margin-bottom: 10px;
+  }
+
+  .plan-features {
+    list-style: none;
+    text-align: right;
+  }
+
+  .plan-features li {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+    padding-right: 14px;
+    position: relative;
+  }
+
+  .plan-features li::before {
+    content: '✓';
+    position: absolute;
+    right: 0;
+    color: #D4AF37;
+    font-size: 10px;
+  }
+
+  /* QR + CTA */
+  .bottom {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    background: rgba(212,175,55,0.05);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 16px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+  }
+
+  .qr-wrap {
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .qr-box {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 6px;
+    padding: 6px;
+  }
+
+  .qr-box svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .qr-label {
+    font-size: 10px;
+    color: #888;
+  }
+
+  .cta-text {
+    flex: 1;
+  }
+
+  .cta-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+
+  .cta-desc {
+    font-size: 12px;
+    color: #777;
+    line-height: 1.7;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, #D4AF37, #8B6914);
+    color: #111;
+    font-size: 12px;
+    font-weight: 700;
+    border-radius: 8px;
+    text-decoration: none;
+  }
+
+  /* Footer */
+  .front-footer {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  .front-footer p {
+    font-size: 10px;
+    color: #333;
+    letter-spacing: 1px;
+  }
+
+  .front-footer span {
+    color: #D4AF37;
+  }
+
+  /* ══════════════════════════════════
+     BACK SIDE
+  ══════════════════════════════════ */
+  .back {
+    background: linear-gradient(160deg, #0d1a0d 0%, #0a120a 50%, #050505 100%);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .back::before {
+    content: '';
+    display: block;
+    height: 6px;
+    background: linear-gradient(90deg, #1a4d1a, #2d7a2d, #3da53d, #2d7a2d, #1a4d1a);
+  }
+
+  .back-inner {
+    padding: 40px 44px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .back-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .back-header h2 {
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .back-header h2 span {
+    background: linear-gradient(135deg, #2d7a2d, #3da53d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .back-header p {
+    font-size: 13px;
+    color: #668866;
+  }
+
+  /* How it works */
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .step {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2d7a2d, #1a4d1a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 900;
+    color: #81c784;
+    flex-shrink: 0;
+    border: 1px solid #2d7a2d;
+  }
+
+  .step-content h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #c8e6c9;
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 12px;
+    color: #668866;
+    line-height: 1.6;
+  }
+
+  /* Testimonial */
+  .testimonials {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .testimonial {
+    background: rgba(45,122,45,0.08);
+    border: 1px solid rgba(45,122,45,0.25);
+    border-radius: 14px;
+    padding: 16px;
+  }
+
+  .testimonial-stars {
+    color: #D4AF37;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .testimonial-text {
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+
+  .testimonial-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: #81c784;
+  }
+
+  .testimonial-role {
+    font-size: 10px;
+    color: #557755;
+  }
+
+  /* Contact */
+  .contact-section {
+    background: rgba(45,122,45,0.08);
+    border: 1px solid rgba(45,122,45,0.3);
+    border-radius: 16px;
+    padding: 22px;
+    margin-bottom: 24px;
+  }
+
+  .contact-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #3da53d;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .contacts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .contact-item {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .contact-icon {
+    font-size: 18px;
+  }
+
+  .contact-info label {
+    display: block;
+    font-size: 10px;
+    color: #557755;
+    margin-bottom: 1px;
+  }
+
+  .contact-info span {
+    font-size: 13px;
+    font-weight: 600;
+    color: #c8e6c9;
+    direction: ltr;
+    display: block;
+  }
+
+  /* Back footer */
+  .back-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 1px solid #1a2a1a;
+  }
+
+  .back-footer .logo-ar-sm {
+    font-family: 'Amiri', serif;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(180deg, #D4AF37, #8B6914);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .back-footer .tagline {
+    font-size: 10px;
+    color: #333;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .back-footer .zawan-sm {
+    font-size: 13px;
+    font-weight: 700;
+    color: #3da53d;
+    letter-spacing: 2px;
+  }
+
+  /* Print */
+  @media print {
+    body { background: white; padding: 0; gap: 0; }
+    .brochure { width: 210mm; }
+    .front, .back { min-height: 297mm; }
+  }
+
+  /* Screen labels */
+  .screen-label {
+    color: #D4AF37;
+    font-size: 14px;
+    font-family: 'Cairo', sans-serif;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<p class="screen-label">◈ الوجه الأمامي</p>
+
+<!-- ════════════════════════════════════
+     FRONT
+════════════════════════════════════ -->
+<div class="brochure front">
+  <div class="front-inner">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-wrap">
+        <div class="logo-icon">⚕️</div>
+        <div class="logo-text">
+          <span class="logo-ar">صيدلي</span>
+          <span class="logo-en">Saydali Pharmacy</span>
+        </div>
+      </div>
+      <div class="zawan-badge">
+        <span class="zawan-label">تطوير وتصميم</span>
+        <span class="zawan-name">ZAWAN</span>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-symbol">⚕️</div>
+      <div class="hero-tag">منصة الصيدلة الرقمية في العراق</div>
+      <h1 class="hero-title">
+        وصّل صيدليتك<br>
+        لـ <span>آلاف الزبائن</span>
+      </h1>
+      <div class="divider"></div>
+      <p class="hero-sub">
+        منصة صيدلي تربط الزبائن بصيدليتك مباشرة — يبحثون عن الدواء، يجدونك، ويطلبون منك بضغطة واحدة
+      </p>
+    </div>
+
+    <!-- Features -->
+    <div class="features">
+      <div class="feat">
+        <div class="feat-icon">📱</div>
+        <div class="feat-title">تطبيق ذكي</div>
+        <div class="feat-desc">واجهة سهلة للزبون يطلب أدويته من هاتفه</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🛵</div>
+        <div class="feat-title">توصيل سريع</div>
+        <div class="feat-desc">نظام طلبات وتوصيل متكامل لصيدليتك</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">📊</div>
+        <div class="feat-title">لوحة تحكم</div>
+        <div class="feat-desc">إدارة أدويتك وطلباتك وإيراداتك بسهولة</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔍</div>
+        <div class="feat-title">بحث ذكي</div>
+        <div class="feat-desc">الزبون يبحث بالاسم العربي أو الإنجليزي</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">⭐</div>
+        <div class="feat-title">تقييمات</div>
+        <div class="feat-desc">ابنِ سمعتك وجذب زبائن جدد بالتقييمات</div>
+      </div>
+      <div class="feat">
+        <div class="feat-icon">🔒</div>
+        <div class="feat-title">آمن وموثوق</div>
+        <div class="feat-desc">نظام تحقق ثنائي وحماية كاملة للبيانات</div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-val">+500</div>
+        <div class="stat-label">صيدلية مسجلة</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <div class="stat-val">+10K</div>
+        <div class="stat-label">مستخدم نشط</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <div class="stat-val">18</div>
+        <div class="stat-label">محافظة عراقية</div>
+      </div>
+      <div class="stat-sep"></div>
+      <div class="stat">
+        <div class="stat-val">98%</div>
+        <div class="stat-label">رضا الزبائن</div>
+      </div>
+    </div>
+
+    <!-- Plans -->
+    <div class="plans-title">اختر خطة اشتراكك</div>
+    <div class="plans">
+      <div class="plan">
+        <div class="plan-name">شهري</div>
+        <div class="plan-price">$29</div>
+        <div class="plan-period">/ شهر</div>
+        <ul class="plan-features">
+          <li>لوحة تحكم كاملة</li>
+          <li>حتى 200 منتج</li>
+          <li>نظام الطلبات</li>
+          <li>دعم فني</li>
+        </ul>
+      </div>
+      <div class="plan highlight">
+        <div class="plan-badge">الأكثر طلباً</div>
+        <div class="plan-name">ربع سنوي</div>
+        <div class="plan-price">$79</div>
+        <div class="plan-period">كل 3 أشهر</div>
+        <ul class="plan-features">
+          <li>كل مميزات الشهري</li>
+          <li>منتجات غير محدودة</li>
+          <li>إحصائيات متقدمة</li>
+          <li>أولوية في الدعم</li>
+        </ul>
+      </div>
+      <div class="plan">
+        <div class="plan-name">سنوي</div>
+        <div class="plan-price">$290</div>
+        <div class="plan-period">/ سنة — وفر 17%</div>
+        <ul class="plan-features">
+          <li>كل المميزات</li>
+          <li>منتجات غير محدودة</li>
+          <li>تقارير شهرية</li>
+          <li>مدير حساب خاص</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- QR + CTA -->
+    <div class="bottom">
+      <div class="qr-wrap">
+        <!-- QR Code SVG (placeholder pattern) -->
+        <div class="qr-box">
+          <svg viewBox="0 0 37 37" xmlns="http://www.w3.org/2000/svg" fill="#000">
+            <!-- QR corners -->
+            <rect x="1" y="1" width="10" height="10" rx="1.5" fill="none" stroke="#000" stroke-width="1.2"/>
+            <rect x="3" y="3" width="6" height="6" rx="0.5"/>
+            <rect x="26" y="1" width="10" height="10" rx="1.5" fill="none" stroke="#000" stroke-width="1.2"/>
+            <rect x="28" y="3" width="6" height="6" rx="0.5"/>
+            <rect x="1" y="26" width="10" height="10" rx="1.5" fill="none" stroke="#000" stroke-width="1.2"/>
+            <rect x="3" y="28" width="6" height="6" rx="0.5"/>
+            <!-- QR data dots -->
+            <rect x="13" y="1" width="2" height="2"/>
+            <rect x="16" y="1" width="2" height="2"/>
+            <rect x="19" y="3" width="2" height="2"/>
+            <rect x="22" y="1" width="2" height="2"/>
+            <rect x="13" y="4" width="2" height="2"/>
+            <rect x="16" y="6" width="2" height="2"/>
+            <rect x="19" y="6" width="2" height="2"/>
+            <rect x="22" y="4" width="2" height="2"/>
+            <rect x="13" y="7" width="2" height="2"/>
+            <rect x="19" y="9" width="2" height="2"/>
+            <rect x="22" y="7" width="2" height="2"/>
+            <rect x="13" y="13" width="2" height="2"/>
+            <rect x="16" y="13" width="2" height="2"/>
+            <rect x="19" y="13" width="2" height="2"/>
+            <rect x="22" y="16" width="2" height="2"/>
+            <rect x="25" y="13" width="2" height="2"/>
+            <rect x="13" y="16" width="2" height="2"/>
+            <rect x="19" y="16" width="2" height="2"/>
+            <rect x="25" y="16" width="2" height="2"/>
+            <rect x="13" y="19" width="2" height="2"/>
+            <rect x="16" y="19" width="2" height="2"/>
+            <rect x="22" y="19" width="2" height="2"/>
+            <rect x="25" y="19" width="2" height="2"/>
+            <rect x="13" y="22" width="2" height="2"/>
+            <rect x="19" y="22" width="2" height="2"/>
+            <rect x="25" y="22" width="2" height="2"/>
+            <rect x="16" y="25" width="2" height="2"/>
+            <rect x="19" y="28" width="2" height="2"/>
+            <rect x="22" y="25" width="2" height="2"/>
+            <rect x="25" y="28" width="2" height="2"/>
+            <rect x="28" y="13" width="2" height="2"/>
+            <rect x="31" y="13" width="2" height="2"/>
+            <rect x="34" y="13" width="2" height="2"/>
+            <rect x="28" y="16" width="2" height="2"/>
+            <rect x="34" y="16" width="2" height="2"/>
+            <rect x="28" y="19" width="2" height="2"/>
+            <rect x="31" y="19" width="2" height="2"/>
+            <rect x="1" y="13" width="2" height="2"/>
+            <rect x="4" y="13" width="2" height="2"/>
+            <rect x="7" y="13" width="2" height="2"/>
+            <rect x="10" y="13" width="2" height="2"/>
+            <rect x="1" y="16" width="2" height="2"/>
+            <rect x="7" y="16" width="2" height="2"/>
+            <rect x="10" y="19" width="2" height="2"/>
+            <rect x="4" y="19" width="2" height="2"/>
+            <!-- center logo hint -->
+            <rect x="16" y="16" width="5" height="5" rx="1" fill="#D4AF37"/>
+          </svg>
+        </div>
+        <div class="qr-label">امسح للتسجيل</div>
+      </div>
+      <div class="cta-text">
+        <div class="cta-title">سجّل صيدليتك الآن</div>
+        <div class="cta-desc">
+          انضم لمئات الصيدليات التي تعمل معنا.<br>
+          التسجيل مجاني لأول 30 يوم — لا بطاقة مطلوبة.
+        </div>
+        <a class="cta-btn" href="#">ابدأ تجربتك المجانية ←</a>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="front-footer">
+      <p>جميع الحقوق محفوظة © 2025 — <span>ZAWAN</span> للحلول البرمجية — العراق</p>
+    </div>
+
+  </div>
+</div>
+
+
+<p class="screen-label">◈ الوجه الخلفي</p>
+
+<!-- ════════════════════════════════════
+     BACK
+════════════════════════════════════ -->
+<div class="brochure back">
+  <div class="back-inner">
+
+    <!-- Back header -->
+    <div class="back-header">
+      <h2>كيف تبدأ مع <span>صيدلي</span>؟</h2>
+      <p>أربع خطوات بسيطة وصيدليتك تصل لآلاف الزبائن</p>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>سجّل صيدليتك</h4>
+          <p>أدخل معلومات صيدليتك الأساسية — الاسم، العنوان، أوقات العمل. يستغرق أقل من 5 دقائق.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>أضف قائمة أدويتك</h4>
+          <p>اختر الأدوية المتوفرة عندك من قاعدة بياناتنا الضخمة وحدد أسعارك الخاصة.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>استقبل الطلبات</h4>
+          <p>يصلك إشعار فوري بكل طلب جديد. قبّل أو ارفض وتواصل مع الزبون مباشرة.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>تتبع إيراداتك</h4>
+          <p>لوحة تحكم متكاملة تعرض طلباتك وإيراداتك الشهرية وتقييمات الزبائن.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials -->
+    <div class="testimonials">
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"من لمّا اشتركنا بصيدلي زادت مبيعاتنا أكثر من 40%. الزبائن يطلبون من البيت وهاي سهّلت علينا وعليهم."</div>
+        <div class="testimonial-name">أحمد محمد</div>
+        <div class="testimonial-role">صيدلية الأمل — بغداد</div>
+      </div>
+      <div class="testimonial">
+        <div class="testimonial-stars">★★★★★</div>
+        <div class="testimonial-text">"واجهة سهلة وفريق دعم ممتاز. ساعدونا نسوي كل شي بيوم وحد. أنصح كل صيدلاني يجربها."</div>
+        <div class="testimonial-name">محمد حسن</div>
+        <div class="testimonial-role">صيدلية الشفاء — أربيل</div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div class="contact-section">
+      <div class="contact-title">تواصل معنا</div>
+      <div class="contacts">
+        <div class="contact-item">
+          <div class="contact-icon">📞</div>
+          <div class="contact-info">
+            <label>هاتف</label>
+            <span>+964 770 000 0000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📧</div>
+          <div class="contact-info">
+            <label>بريد إلكتروني</label>
+            <span>info@zawan.iq</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">🌐</div>
+          <div class="contact-info">
+            <label>موقعنا</label>
+            <span>www.saydali.iq</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-info">
+            <label>المقر</label>
+            <span>بغداد، العراق</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">💬</div>
+          <div class="contact-info">
+            <label>واتساب</label>
+            <span>+964 770 000 0000</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div class="contact-info">
+            <label>انستغرام</label>
+            <span>@saydali.iq</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back footer -->
+    <div class="back-footer">
+      <span class="logo-ar-sm">صيدلي</span>
+      <div class="tagline">
+        منصة الصيدلة الرقمية في العراق<br>
+        <span style="color:#333">© 2025 جميع الحقوق محفوظة</span>
+      </div>
+      <span class="zawan-sm">ZAWAN</span>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
