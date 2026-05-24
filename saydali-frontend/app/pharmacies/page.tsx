@@ -1,6 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 const CITIES = ['الكل', 'بغداد', 'البصرة', 'أربيل', 'موصل', 'النجف', 'كربلاء', 'السليمانية'];
 
@@ -21,6 +22,12 @@ export default function PharmaciesPage() {
   const [city, setCity]       = useState('الكل');
   const [onlyOpen, setOnlyOpen]         = useState(false);
   const [onlyDelivery, setOnlyDelivery] = useState(false);
+  const [favs, setFavs] = useState<number[]>([1, 3]);
+
+  const toggleFav = (id: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    setFavs(prev => prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]);
+  };
 
   const filtered = useMemo(() => PHARMACIES.filter(p => {
     if (search && !p.name.includes(search) && !p.address.includes(search)) return false;
@@ -52,9 +59,10 @@ export default function PharmaciesPage() {
           <span style={{ fontSize: 22 }}>⚕️</span>
           <span style={{ fontSize: 20, fontWeight: 700, background: 'linear-gradient(135deg,#D4AF37,#F0D060)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>صيدلي</span>
         </Link>
-        <Link href="/cart" style={{ textDecoration: 'none', fontSize: 22, position: 'relative' }}>
-          🛒
-        </Link>
+        <div style={{ display:'flex', gap:14, alignItems:'center' }}>
+          <Link href="/favorites" style={{ textDecoration:'none', fontSize:22 }}>❤️</Link>
+          <Link href="/cart" style={{ textDecoration:'none', fontSize:22 }}>🛒</Link>
+        </div>
       </header>
 
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '28px 20px' }}>
@@ -113,7 +121,12 @@ export default function PharmaciesPage() {
                       {p.image}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <h3 style={{ fontSize: 15, fontWeight: 700, margin: '0 0 4px', color: '#e8e0d0' }}>{p.name}</h3>
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+                        <h3 style={{ fontSize: 15, fontWeight: 700, margin: '0 0 4px', color: '#e8e0d0' }}>{p.name}</h3>
+                        <button onClick={(e)=>toggleFav(p.id,e)} style={{ background:'none', border:'none', cursor:'pointer', fontSize:18, padding:0, lineHeight:1, flexShrink:0 }}>
+                          {favs.includes(p.id) ? '❤️' : '🤍'}
+                        </button>
+                      </div>
                       <p style={{ fontSize: 12, color: '#888', margin: '0 0 8px' }}>📍 {p.address}</p>
                       <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                         <span style={{

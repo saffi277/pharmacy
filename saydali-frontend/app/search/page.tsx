@@ -27,8 +27,15 @@ const PHARM_MAP: Record<number, { names: string[]; ids: number[] }> = {
 export default function SearchPage() {
   const [query, setQuery]       = useState('');
   const [category, setCategory] = useState('الكل');
+  const [maxPrice, setMaxPrice] = useState(20000);
+  const [sortBy, setSortBy]     = useState<'default'|'price-asc'|'price-desc'>('default');
 
-  const results = useMemo(() => searchMedicines(query, category), [query, category]);
+  const results = useMemo(() => {
+    let r = searchMedicines(query, category).filter(m => m.basePrice <= maxPrice);
+    if (sortBy === 'price-asc')  r = [...r].sort((a,b) => a.basePrice - b.basePrice);
+    if (sortBy === 'price-desc') r = [...r].sort((a,b) => b.basePrice - a.basePrice);
+    return r;
+  }, [query, category, maxPrice, sortBy]);
 
   return (
     <div dir="rtl" style={{ minHeight:'100vh', background:'#0f0f0f', color:'#e8e0d0', fontFamily:'Segoe UI,Tahoma,Arial,sans-serif' }}>
@@ -88,6 +95,25 @@ export default function SearchPage() {
           ))}
         </div>
 
+        {/* Price + Sort filters */}
+        <div style={{ display:'flex', gap:14, flexWrap:'wrap', alignItems:'center', marginBottom:20, padding:'14px 18px', background:'#161616', border:'1px solid #222', borderRadius:12 }}>
+          <div style={{ flex:1, minWidth:180 }}>
+            <div style={{ display:'flex', justifyContent:'space-between', marginBottom:6 }}>
+              <span style={{ fontSize:12, color:'#888' }}>الحد الأقصى للسعر</span>
+              <span style={{ fontSize:12, color:'#D4AF37', fontWeight:700 }}>{maxPrice.toLocaleString()} د.ع</span>
+            </div>
+            <input type="range" min={1000} max={20000} step={500} value={maxPrice} onChange={e=>setMaxPrice(Number(e.target.value))}
+              style={{ width:'100%', accentColor:'#D4AF37' }} />
+          </div>
+          <div style={{ display:'flex', gap:8 }}>
+            {([['default','الكل'],['price-asc','الأرخص'],['price-desc','الأغلى']] as const).map(([val,label]) => (
+              <button key={val} onClick={()=>setSortBy(val)} style={{ padding:'6px 12px', borderRadius:8, border:'1px solid #2a2a2a', background: sortBy===val ? 'rgba(212,175,55,0.15)' : 'transparent', color: sortBy===val ? '#D4AF37' : '#888', cursor:'pointer', fontSize:12, fontFamily:'inherit', borderColor: sortBy===val ? '#D4AF37' : '#2a2a2a' }}>
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+
         <p style={{ fontSize:13, color:'#555', marginBottom:16 }}>{results.length} دواء</p>
 
         {results.length === 0 ? (
@@ -101,7 +127,7 @@ export default function SearchPage() {
             {results.map((m, i) => {
               const pharmData = PHARM_MAP[m.id];
               return (
-                <div key={m.id} className="result-card" style={{ animationDelay:`${i*40}ms`, opacity:0 }}>
+                <div key={m.id} className="result-card" style={{ animationDelay:`${i*40}ms`, opacity:0, position:'relative' }}>
                   <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:12 }}>
                     <div>
                       <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:4 }}>
@@ -122,6 +148,7 @@ export default function SearchPage() {
                         {m.basePrice.toLocaleString()} <span style={{ fontSize:12, fontWeight:400, color:'#888' }}>د.ع</span>
                       </div>
                       <div style={{ fontSize:12, color:'#81c784', marginTop:2 }}>✓ متوفر</div>
+                      <Link href={`/medicines/${m.id}`} style={{ fontSize:11, color:'#D4AF37', marginTop:4, display:'block', textDecoration:'none' }}>تفاصيل ←</Link>
                     </div>
                   </div>
 
